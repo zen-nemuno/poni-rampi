@@ -19,7 +19,7 @@ export function HistoryList({ history }: HistoryListProps) {
               {historyItem.pokemon.map((pokemon) => pokemon.nameJa).join(" / ")}
             </div>
             <div className={styles.historyMeta}>
-              {historyItem.mode === "single" ? "1体" : "5人チーム"}
+              {getModeLabel(historyItem.mode)}
             </div>
           </div>
           <div className={styles.historyMeta}>
@@ -29,4 +29,16 @@ export function HistoryList({ history }: HistoryListProps) {
       ))}
     </div>
   );
+}
+
+function getModeLabel(mode: RandomPickHistoryItem["mode"]) {
+  if (mode === "single") {
+    return "1体";
+  }
+
+  if (mode === "custom") {
+    return "10人カスタム";
+  }
+
+  return "5人チーム";
 }

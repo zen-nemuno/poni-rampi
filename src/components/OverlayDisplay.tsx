@@ -66,6 +66,19 @@ function SingleOverlay({ result }: { result: LatestPickResult }) {
 }
 
 function TeamOverlay({ result }: { result: LatestPickResult }) {
+  if (result.mode === "custom") {
+    return (
+      <div className={styles.team}>
+        <div className={styles.label}>今夜の5vs5夢カスタム</div>
+        <div className={styles.overlayVersusGrid}>
+          <OverlayTeamColumn label="チームA" pokemon={result.pokemon.slice(0, 5)} start={1} />
+          <div className={styles.overlayVersusBadge}>VS</div>
+          <OverlayTeamColumn label="チームB" pokemon={result.pokemon.slice(5, 10)} start={6} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.team}>
       <div className={styles.label}>今夜の5人夢チーム</div>
@@ -78,6 +91,33 @@ function TeamOverlay({ result }: { result: LatestPickResult }) {
             <span>{index + 1}P</span>
             <div className={styles.teamDreamImage}>{roleSymbols[pokemon.role]}</div>
             <strong>{pokemon.nameJa}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function OverlayTeamColumn({
+  label,
+  pokemon,
+  start
+}: {
+  label: string;
+  pokemon: LatestPickResult["pokemon"];
+  start: number;
+}) {
+  return (
+    <div className={styles.overlayTeamColumn}>
+      <div className={styles.overlayTeamLabel}>{label}</div>
+      <div className={styles.overlayTeamList}>
+        {pokemon.map((pickedPokemon, index) => (
+          <div
+            key={pickedPokemon.id}
+            className={`${styles.overlayMiniSlot} ${styles[pickedPokemon.role]}`}
+          >
+            <span>{start + index}P</span>
+            <strong>{pickedPokemon.nameJa}</strong>
           </div>
         ))}
       </div>

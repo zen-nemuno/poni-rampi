@@ -1,26 +1,75 @@
 .overlay {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 100vh;
   padding: 24px;
   color: #ffffff;
   background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.38), transparent 22%),
+    radial-gradient(circle at 84% 78%, rgba(255, 247, 207, 0.26), transparent 24%),
     linear-gradient(135deg, rgba(185, 245, 255, 0.42), rgba(202, 248, 255, 0.72) 48%, rgba(145, 231, 255, 0.66)),
     transparent;
 }
 
+.overlay::before {
+  position: fixed;
+  inset: 0;
+  content: "";
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(255, 247, 207, 0.35) 0 1px, transparent 2px);
+  background-position:
+    0 0,
+    22px 18px;
+  background-size:
+    52px 52px,
+    74px 74px;
+  pointer-events: none;
+}
+
 .panel {
+  position: relative;
+  overflow: hidden;
   width: min(1120px, 96vw);
   padding: clamp(20px, 4vw, 44px);
-  border: 2px solid rgba(255, 255, 255, 0.58);
-  border-radius: 30px;
-  background: rgba(38, 82, 112, 0.78);
+  border: 2px solid rgba(255, 255, 255, 0.66);
+  border-radius: 44px;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.22), transparent 24%),
+    linear-gradient(135deg, rgba(38, 82, 112, 0.82), rgba(42, 132, 164, 0.76));
   box-shadow:
-    0 24px 80px rgba(75, 162, 199, 0.28),
+    0 26px 90px rgba(75, 162, 199, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+.panel::before,
+.panel::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.panel::before {
+  width: 180px;
+  height: 180px;
+  right: -52px;
+  top: -74px;
+  background: rgba(145, 231, 255, 0.28);
+}
+
+.panel::after {
+  width: 110px;
+  height: 110px;
+  left: 42px;
+  bottom: -46px;
+  background: rgba(255, 247, 207, 0.2);
+}
+
 .brand {
+  position: relative;
+  z-index: 1;
   color: #caf8ff;
   font-size: clamp(22px, 3vw, 34px);
   font-weight: 900;
@@ -30,6 +79,8 @@
 
 .single,
 .team {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 14px;
   margin-top: 16px;
@@ -51,6 +102,10 @@
   font-weight: 900;
 }
 
+.team .label {
+  grid-area: auto;
+}
+
 .singleDreamImage {
   grid-area: image;
   position: relative;
@@ -60,7 +115,7 @@
   aspect-ratio: 1;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.28);
-  border-radius: 30px;
+  border-radius: 44px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.32),
     0 22px 46px rgba(45, 123, 158, 0.22);
@@ -128,14 +183,103 @@
   gap: 12px;
 }
 
+.overlayVersusGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.overlayTeamColumn {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.overlayTeamLabel {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: #caf8ff;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: clamp(18px, 2.4vw, 30px);
+  font-weight: 900;
+}
+
+.overlayTeamList {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.overlayVersusBadge {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  min-width: 96px;
+  min-height: 34px;
+  padding: 0 20px;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.32), transparent 28%),
+    rgba(45, 82, 115, 0.74);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.overlayMiniSlot {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  align-items: center;
+  min-height: 82px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.overlayMiniSlot span {
+  color: #caf8ff;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.overlayMiniSlot strong {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: clamp(17px, 1.55vw, 23px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .teamSlot {
   display: grid;
   gap: 8px;
   min-height: 150px;
   padding: 16px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(202, 248, 255, 0.34);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 22% 16%, rgba(255, 255, 255, 0.26), transparent 30%),
+    rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 16px 34px rgba(20, 80, 114, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .attacker {
@@ -169,7 +313,7 @@
   place-items: center;
   width: 48px;
   aspect-ratio: 1;
-  border-radius: 16px;
+  border-radius: 999px;
   color: #ffffff;
   background: rgba(45, 82, 115, 0.74);
   font-size: 11px;
@@ -202,7 +346,8 @@
       "meta";
   }
 
-  .teamGrid {
+  .teamGrid,
+  .overlayTeamList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

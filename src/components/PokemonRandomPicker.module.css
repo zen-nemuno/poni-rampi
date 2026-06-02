@@ -1,6 +1,37 @@
 .page {
+  position: relative;
   min-height: 100vh;
-  padding: 28px;
+  overflow: hidden;
+  padding: 34px;
+}
+
+.page::before,
+.page::after {
+  position: fixed;
+  z-index: -1;
+  content: "";
+  border-radius: 999px;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.page::before {
+  width: 280px;
+  height: 280px;
+  left: -86px;
+  top: 160px;
+  background: rgba(202, 248, 255, 0.62);
+  box-shadow:
+    74vw 16vh 0 -68px rgba(215, 255, 243, 0.76),
+    62vw 72vh 0 -54px rgba(255, 247, 207, 0.58);
+}
+
+.page::after {
+  width: 190px;
+  height: 190px;
+  right: -52px;
+  bottom: 12vh;
+  background: rgba(145, 231, 255, 0.34);
 }
 
 .shell {
@@ -17,6 +48,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
+  padding: 8px 6px 2px;
 }
 
 .eyebrow {
@@ -30,10 +62,13 @@
 
 .title {
   margin: 0;
-  color: #1c3452;
+  color: #163653;
   font-size: clamp(42px, 6vw, 82px);
   line-height: 0.95;
-  text-shadow: 0 8px 26px rgba(126, 220, 255, 0.32);
+  letter-spacing: -0.055em;
+  text-shadow:
+    0 12px 30px rgba(126, 220, 255, 0.36),
+    0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .subtitle {
@@ -47,15 +82,25 @@
   display: inline-flex;
   align-items: center;
   min-height: 48px;
-  padding: 0 18px;
+  padding: 0 20px;
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 999px;
   color: #ffffff;
-  background: linear-gradient(135deg, #2d5273, #3daed0 58%, #91e7ff);
+  background:
+    radial-gradient(circle at 25% 18%, rgba(255, 255, 255, 0.58), transparent 28%),
+    linear-gradient(135deg, #2d5273, #3daed0 58%, #91e7ff);
   font-weight: 800;
   text-decoration: none;
   box-shadow: var(--shadow);
   white-space: nowrap;
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.overlayLink:hover {
+  box-shadow: 0 26px 72px rgba(75, 162, 199, 0.28);
+  transform: translateY(-2px);
 }
 
 .mainColumn,
@@ -66,14 +111,36 @@
 }
 
 .card {
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  background: var(--paper);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 34px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(239, 253, 255, 0.72)),
+    var(--paper);
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(22px);
+}
+
+.card::before {
+  position: absolute;
+  width: 132px;
+  height: 132px;
+  right: -42px;
+  top: -52px;
+  content: "";
+  border-radius: 999px;
+  background: rgba(145, 231, 255, 0.3);
+  box-shadow:
+    -82px 54px 0 -58px rgba(215, 255, 243, 0.86),
+    -22px 124px 0 -66px rgba(255, 247, 207, 0.7);
+  pointer-events: none;
 }
 
 .cardHeader {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -85,15 +152,17 @@
   margin: 0;
   font-size: 20px;
   color: #2d5273;
+  letter-spacing: -0.03em;
 }
 
 .cardBody {
+  position: relative;
   padding: 18px 20px 20px;
 }
 
 .modeGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -103,21 +172,56 @@
 .ghostButton,
 .copyButton {
   border: 0;
-  border-radius: 14px;
+  border-radius: 999px;
   font-weight: 800;
+  transition:
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    filter 150ms ease;
 }
 
 .modeButton {
-  min-height: 74px;
-  padding: 14px;
+  position: relative;
+  min-height: 86px;
+  padding: 16px 14px;
+  overflow: hidden;
   color: var(--navy);
-  background: linear-gradient(180deg, #ffffff, #eefcff);
-  border: 1px solid rgba(75, 162, 199, 0.24);
+  background:
+    radial-gradient(circle at 25% 18%, rgba(255, 255, 255, 0.94), transparent 24%),
+    linear-gradient(180deg, #ffffff, #eafdff 74%);
+  border: 1px solid rgba(75, 162, 199, 0.18);
+  box-shadow:
+    0 14px 30px rgba(75, 162, 199, 0.11),
+    inset 0 -10px 18px rgba(202, 248, 255, 0.42);
+}
+
+.modeButton:hover,
+.primaryButton:hover,
+.secondaryButton:hover,
+.ghostButton:hover,
+.copyButton:hover {
+  transform: translateY(-2px);
+}
+
+.modeButton::after {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  right: 14px;
+  bottom: -18px;
+  content: "";
+  border-radius: 999px;
+  background: rgba(145, 231, 255, 0.32);
 }
 
 .modeButtonActive {
   color: var(--white);
-  background: linear-gradient(135deg, #2d5273, #3daed0 58%, #91e7ff);
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.46), transparent 28%),
+    linear-gradient(135deg, #2d5273, #3daed0 58%, #91e7ff);
+  box-shadow:
+    0 18px 38px rgba(75, 162, 199, 0.26),
+    inset 0 -12px 18px rgba(28, 52, 82, 0.12);
 }
 
 .actionRow {
@@ -129,10 +233,14 @@
 
 .primaryButton {
   min-height: 56px;
-  padding: 0 24px;
+  padding: 0 28px;
   color: #1c3452;
-  background: linear-gradient(135deg, #fff7cf, #d7fff3 42%, #caf8ff);
-  box-shadow: 0 16px 32px rgba(75, 162, 199, 0.22);
+  background:
+    radial-gradient(circle at 22% 16%, rgba(255, 255, 255, 0.95), transparent 28%),
+    linear-gradient(135deg, #fff7cf, #d7fff3 42%, #caf8ff);
+  box-shadow:
+    0 18px 34px rgba(75, 162, 199, 0.24),
+    inset 0 -12px 18px rgba(145, 231, 255, 0.2);
 }
 
 .primaryButton:disabled {
@@ -144,12 +252,13 @@
 .ghostButton,
 .copyButton {
   min-height: 42px;
-  padding: 0 14px;
+  padding: 0 16px;
 }
 
 .secondaryButton {
   color: var(--navy);
-  background: #edf7ff;
+  background: #effcff;
+  box-shadow: 0 10px 20px rgba(75, 162, 199, 0.12);
 }
 
 .ghostButton {
@@ -160,13 +269,14 @@
 
 .copyButton {
   color: var(--white);
-  background: #2d5273;
+  background: linear-gradient(135deg, #2d5273, #3daed0);
+  box-shadow: 0 12px 24px rgba(45, 123, 158, 0.16);
 }
 
 .message {
   margin-top: 14px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: 22px;
   color: #2d5273;
   background: #eefcff;
   font-weight: 700;
@@ -175,20 +285,25 @@
 .error {
   margin-top: 14px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: 22px;
   color: #8a1740;
   background: #ffe4ee;
   font-weight: 800;
 }
 
 .roulette {
+  position: relative;
   display: grid;
   place-items: center;
-  min-height: 172px;
-  padding: 24px;
-  border-radius: 24px;
+  min-height: 196px;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 38px;
   color: var(--white);
   background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.42), transparent 24%),
+    radial-gradient(circle at 88% 76%, rgba(255, 247, 207, 0.34), transparent 22%),
     linear-gradient(135deg, rgba(45, 82, 115, 0.95), rgba(61, 174, 208, 0.9) 58%, rgba(145, 231, 255, 0.86)),
     var(--navy);
   text-align: center;
@@ -197,19 +312,48 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
+.roulette::before,
+.roulette::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.roulette::before {
+  width: 116px;
+  height: 116px;
+  left: -34px;
+  bottom: -42px;
+}
+
+.roulette::after {
+  width: 72px;
+  height: 72px;
+  right: 34px;
+  top: 24px;
+}
+
 .rouletteLead {
+  position: relative;
+  z-index: 1;
   margin: 0 0 10px;
   color: #fff7cf;
   font-weight: 900;
 }
 
 .rouletteName {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-size: clamp(38px, 5vw, 64px);
   font-weight: 900;
+  letter-spacing: -0.045em;
 }
 
 .catchphrase {
+  position: relative;
+  z-index: 1;
   margin: 12px 0 0;
   color: #e9fbff;
   font-size: 22px;
@@ -217,7 +361,10 @@
 }
 
 .candidateCount {
+  padding: 8px 12px;
+  border-radius: 999px;
   color: #3d9dc0;
+  background: rgba(234, 253, 255, 0.78);
   font-weight: 800;
 }
 
@@ -251,11 +398,13 @@
   align-items: center;
   gap: 8px;
   min-height: 38px;
-  padding: 8px 11px;
+  padding: 8px 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.74);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(239, 253, 255, 0.68));
   font-weight: 800;
+  box-shadow: 0 9px 18px rgba(75, 162, 199, 0.08);
 }
 
 .chip input,
@@ -266,26 +415,30 @@
 }
 
 .resultCard {
+  position: relative;
   display: grid;
-  grid-template-columns: 136px minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: 152px minmax(0, 1fr);
+  gap: 22px;
   align-items: center;
+  padding: 12px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .portrait {
   position: relative;
   display: grid;
   place-items: center;
-  width: 136px;
+  width: 152px;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 42px;
   color: #3d9dc0;
   background: linear-gradient(135deg, #eefcff, #ffffff 50%, #dff9ff);
   font-weight: 900;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.78),
-    0 18px 32px rgba(75, 162, 199, 0.18);
+    0 22px 40px rgba(75, 162, 199, 0.2);
 }
 
 .portrait::before,
@@ -357,6 +510,7 @@
   margin: 0;
   font-size: clamp(30px, 4vw, 52px);
   line-height: 1.05;
+  letter-spacing: -0.045em;
 }
 
 .resultSub {
@@ -373,12 +527,13 @@
 }
 
 .metaPill {
-  padding: 7px 10px;
+  padding: 8px 12px;
   border-radius: 999px;
   color: #2d5273;
-  background: #eefcff;
+  background: rgba(238, 252, 255, 0.88);
   font-size: 13px;
   font-weight: 900;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .teamGrid {
@@ -387,14 +542,73 @@
   gap: 10px;
 }
 
+.versusGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.versusColumn {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.versusTeamLabel {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: #2d5273;
+  background: rgba(234, 253, 255, 0.88);
+  font-size: 16px;
+  font-weight: 900;
+  box-shadow: 0 10px 20px rgba(75, 162, 199, 0.1);
+}
+
+.versusTeamList {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.versusBadge {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  min-width: 128px;
+  min-height: 40px;
+  padding: 0 22px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.36), transparent 28%),
+    linear-gradient(135deg, #2d5273, #3daed0);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  box-shadow: 0 16px 30px rgba(75, 162, 199, 0.2);
+}
+
 .teamSlot {
   display: grid;
   align-content: start;
   min-height: 118px;
-  padding: 14px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #ffffff, #f2fdff 48%, #dff9ff);
-  border: 1px solid rgba(75, 162, 199, 0.18);
+  padding: 15px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.88), transparent 28%),
+    linear-gradient(180deg, #ffffff, #f2fdff 48%, #dff9ff);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 14px 28px rgba(75, 162, 199, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .attacker {
@@ -427,6 +641,8 @@
   margin: 8px 0 4px;
   font-size: 20px;
   font-weight: 900;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
 }
 
 .slotDreamImage {
@@ -435,7 +651,7 @@
   width: 48px;
   aspect-ratio: 1;
   margin-top: 8px;
-  border-radius: 16px;
+  border-radius: 999px;
   color: #ffffff;
   background: rgba(45, 82, 115, 0.78);
   box-shadow: 0 10px 22px rgba(75, 162, 199, 0.16);
@@ -457,10 +673,11 @@
 .historyItem {
   display: grid;
   gap: 10px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.68);
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 12px 24px rgba(75, 162, 199, 0.08);
 }
 
 .settingsTop,
@@ -489,14 +706,15 @@
 
 .emptyState {
   padding: 18px;
-  border-radius: 14px;
+  border-radius: 24px;
   color: #41637d;
   background: rgba(255, 255, 255, 0.58);
   font-weight: 800;
 }
 
 @media (max-width: 900px) {
-  .teamGrid {
+  .teamGrid,
+  .versusTeamList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -506,7 +724,8 @@
     grid-template-columns: 1fr;
   }
 
-  .teamGrid {
+  .teamGrid,
+  .versusTeamList {
     grid-template-columns: 1fr;
   }
 }

@@ -40,6 +40,8 @@ const noCandidatesMessage =
   "条件に合うポケモンがいません。フィルターや除外設定を見直してください。";
 const notEnoughTeamMessage =
   "5人分を抽選するには、条件に合うポケモンが5体以上必要です。";
+const notEnoughCustomMessage =
+  "5vs5を抽選するには、条件に合うポケモンが10体以上必要です。";
 
 export function PokemonRandomPicker() {
   const [mode, setMode] = useState<PickMode>("single");
@@ -100,8 +102,12 @@ export function PokemonRandomPicker() {
     setErrorMessage("");
     setCopyMessage("");
 
-    if (mode === "team" && candidates.length < 5) {
-      setErrorMessage(notEnoughTeamMessage);
+    const pickCount = getPickCount(mode);
+    const notEnoughMessage =
+      mode === "custom" ? notEnoughCustomMessage : notEnoughTeamMessage;
+
+    if (mode !== "single" && candidates.length < pickCount) {
+      setErrorMessage(notEnoughMessage);
       return;
     }
 
@@ -115,10 +121,10 @@ export function PokemonRandomPicker() {
         ? [pickOnePokemon(pokemonList, filters, history)].filter(
             (pokemon): pokemon is Pokemon => pokemon !== null
           )
-        : pickTeamPokemon(pokemonList, filters, history, 5);
+        : pickTeamPokemon(pokemonList, filters, history, pickCount);
 
     if (pickedPokemon.length === 0) {
-      setErrorMessage(mode === "team" ? notEnoughTeamMessage : noCandidatesMessage);
+      setErrorMessage(mode === "single" ? noCandidatesMessage : notEnoughMessage);
       return;
     }
 
@@ -154,7 +160,7 @@ export function PokemonRandomPicker() {
       setLatestResult(result);
       setHistory((currentHistory) => [nextHistoryItem, ...currentHistory]);
       saveLatestPickResult(result);
-      setRouletteName(pickedPokemon.map((pokemon) => pokemon.nameJa).join(" / "));
+      setRouletteName(formatRouletteResultName(mode, pickedPokemon));
       setIsRolling(false);
     }, elapsed + 420);
 
@@ -226,6 +232,15 @@ export function PokemonRandomPicker() {
                 >
                   5人チームランダム
                 </button>
+                <button
+                  className={`${styles.modeButton} ${
+                    mode === "custom" ? styles.modeButtonActive : ""
+                  }`}
+                  type="button"
+                  onClick={() => setMode("custom")}
+                >
+                  10人カスタム 5vs5
+                </button>
               </div>
               <div className={styles.actionRow}>
                 <button
@@ -275,7 +290,10 @@ export function PokemonRandomPicker() {
                 {latestResult.mode === "single" ? (
                   <ResultDisplay pokemon={latestResult.pokemon[0]} />
                 ) : (
-                  <TeamResultDisplay pokemon={latestResult.pokemon} />
+                  <TeamResultDisplay
+                    pokemon={latestResult.pokemon}
+                    mode={latestResult.mode}
+                  />
                 )}
               </div>
             </div>
@@ -342,12 +360,54 @@ function createCopyText(result: LatestPickResult) {
     ].join("\n");
   }
 
-  return [
+  if (result.mode === "custom") {
+    const teamA = result.pokemon.slice(0, 5);
+    const teamB = result.pokemon.slice(5, 10);
+
+    return [
       "今夜のPoni Rampi結果！",
+      "",
+      "チームA",
+      ...teamA.map((pokemon, index) => `${index + 1}P：${pokemon.nameJa}`),
+      "",
+      "チームB",
+      ...teamB.map((pokemon, index) => `${index + 6}P：${pokemon.nameJa}`),
+      "",
+      "#PoniRampi",
+      "#ポケモンユナイト"
+    ].join("\n");
+  }
+
+  return [
+    "今夜のPoni Rampi結果！",
     "",
     ...result.pokemon.map((pokemon, index) => `${index + 1}P：${pokemon.nameJa}`),
     "",
     "#PoniRampi",
     "#ポケモンユナイト"
   ].join("\n");
+}
+
+function getPickCount(mode: PickMode) {
+  if (mode === "custom") {
+    return 10;
+  }
+
+  if (mode === "team") {
+    return 5;
+  }
+
+  return 1;
+}
+
+function formatRouletteResultName(mode: PickMode, pokemon: Pokemon[]) {
+  if (mode === "single") {
+    return pokemon[0]?.nameJa ?? "";
+  }
+
+  if (mode === "custom") {
+    return "5vs5カスタム決定！";
+  }
+
+  return "5人チーム決定！";
 }

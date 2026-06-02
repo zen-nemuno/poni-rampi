@@ -23,7 +23,7 @@ export type Pokemon = {
   memo?: string;
 };
 
-export type PickMode = "single" | "team";
+export type PickMode = "single" | "team" | "custom";
 
 export type RandomPickFilters = {
   roles: PokemonRole[];
