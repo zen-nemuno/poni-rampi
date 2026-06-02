@@ -30,6 +30,7 @@ import {
   createHistoryItem,
   createPokemonSettings,
   loadPoniRampiStorage,
+  POKEMON_DATA_VERSION,
   saveLatestPickResult,
   savePoniRampiStorage
 } from "@/utils/storage";
@@ -74,6 +75,7 @@ export function PokemonRandomPicker() {
     }
 
     savePoniRampiStorage({
+      pokemonDataVersion: POKEMON_DATA_VERSION,
       pokemonSettings: createPokemonSettings(pokemonList),
       filters,
       history

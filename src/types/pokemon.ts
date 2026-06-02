@@ -47,6 +47,7 @@ export type LatestPickResult = {
 };
 
 export type PoniRampiStorage = {
+  pokemonDataVersion?: string;
   pokemonSettings: {
     id: number;
     isOwned: boolean;

@@ -9,8 +9,10 @@ import { defaultFilters } from "@/utils/randomPick";
 
 export const SETTINGS_STORAGE_KEY = "poni-rampi-settings";
 export const LATEST_RESULT_STORAGE_KEY = "poni-rampi-latest-result";
+export const POKEMON_DATA_VERSION = "2026-06-02-roster-92";
 
 export const defaultStorage: PoniRampiStorage = {
+  pokemonDataVersion: POKEMON_DATA_VERSION,
   pokemonSettings: [],
   filters: defaultFilters,
   history: []
@@ -47,9 +49,13 @@ function writeJson<T>(key: string, value: T) {
 
 export function loadPoniRampiStorage(): PoniRampiStorage {
   const storedValue = readJson<Partial<PoniRampiStorage>>(SETTINGS_STORAGE_KEY);
+  const canUseStoredPokemonSettings =
+    storedValue?.pokemonDataVersion === POKEMON_DATA_VERSION;
 
   return {
-    pokemonSettings: Array.isArray(storedValue?.pokemonSettings)
+    pokemonDataVersion: POKEMON_DATA_VERSION,
+    pokemonSettings:
+      canUseStoredPokemonSettings && Array.isArray(storedValue?.pokemonSettings)
       ? storedValue.pokemonSettings
       : defaultStorage.pokemonSettings,
     filters: normalizeFilters(storedValue?.filters),
@@ -75,6 +81,10 @@ export function applyPokemonSettings(
   pokemonList: Pokemon[],
   settings: PoniRampiStorage["pokemonSettings"]
 ) {
+  if (settings.length !== pokemonList.length) {
+    return pokemonList;
+  }
+
   const settingsById = new Map(settings.map((setting) => [setting.id, setting]));
 
   return pokemonList.map((pokemon) => {
