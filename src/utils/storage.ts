@@ -1,11 +1,13 @@
 import type {
   LatestPickResult,
+  PickMode,
   PoniRampiStorage,
   Pokemon,
+  PokemonRole,
   RandomPickFilters,
   RandomPickHistoryItem
 } from "@/types/pokemon";
-import { defaultFilters } from "@/utils/randomPick";
+import { defaultFilters, defaultRoleComposition } from "@/utils/randomPick";
 
 export const SETTINGS_STORAGE_KEY = "poni-rampi-settings";
 export const LATEST_RESULT_STORAGE_KEY = "poni-rampi-latest-result";
@@ -15,6 +17,9 @@ export const defaultStorage: PoniRampiStorage = {
   pokemonDataVersion: POKEMON_DATA_VERSION,
   pokemonSettings: [],
   filters: defaultFilters,
+  selectedMode: "single",
+  roleComposition: defaultRoleComposition,
+  roleFlexCount: 0,
   history: []
 };
 
@@ -59,6 +64,9 @@ export function loadPoniRampiStorage(): PoniRampiStorage {
       ? storedValue.pokemonSettings
       : defaultStorage.pokemonSettings,
     filters: normalizeFilters(storedValue?.filters),
+    selectedMode: normalizePickMode(storedValue?.selectedMode),
+    roleComposition: normalizeRoleComposition(storedValue?.roleComposition),
+    roleFlexCount: normalizeRoleCount(storedValue?.roleFlexCount),
     history: Array.isArray(storedValue?.history)
       ? storedValue.history
       : defaultStorage.history
@@ -136,4 +144,39 @@ function normalizeFilters(filters?: Partial<RandomPickFilters>): RandomPickFilte
         ? filters.excludeHistory
         : defaultFilters.excludeHistory
   };
+}
+
+function normalizePickMode(mode?: PickMode) {
+  if (
+    mode === "single" ||
+    mode === "duo" ||
+    mode === "trio" ||
+    mode === "quick" ||
+    mode === "team" ||
+    mode === "custom"
+  ) {
+    return mode;
+  }
+
+  return defaultStorage.selectedMode;
+}
+
+function normalizeRoleComposition(
+  roleComposition?: Partial<Record<PokemonRole, number>>
+) {
+  return {
+    attacker: normalizeRoleCount(roleComposition?.attacker),
+    defender: normalizeRoleCount(roleComposition?.defender),
+    speedster: normalizeRoleCount(roleComposition?.speedster),
+    allRounder: normalizeRoleCount(roleComposition?.allRounder),
+    supporter: normalizeRoleCount(roleComposition?.supporter)
+  };
+}
+
+function normalizeRoleCount(value?: number) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return 0;
+  }
+
+  return Math.min(5, Math.max(0, Math.floor(value)));
 }

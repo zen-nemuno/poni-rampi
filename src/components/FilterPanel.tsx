@@ -52,7 +52,7 @@ export function FilterPanel({ filters, onChange }: FilterPanelProps) {
             onChange({ ...filters, ownedOnly: event.target.checked })
           }
         />
-        所持済みのみ
+        所持済みだけに絞る
       </label>
       <label className={styles.toggleLine}>
         <input
@@ -62,7 +62,7 @@ export function FilterPanel({ filters, onChange }: FilterPanelProps) {
             onChange({ ...filters, excludeHistory: event.target.checked })
           }
         />
-        履歴に出たポケモンを除外
+        直近の履歴に出たポケモンを除外
       </label>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { LatestPickResult } from "@/types/pokemon";
 import { roleLabels } from "@/types/pokemon";
@@ -32,6 +33,9 @@ export function OverlayDisplay() {
 
   return (
     <main className={styles.overlay}>
+      <Link className={styles.homeLink} href="/" aria-label="トップ画面へ戻る">
+        操作画面へ
+      </Link>
       <section className={styles.panel} aria-live="polite">
         <div className={styles.brand}>Nemuno Poni / Poni Rampi</div>
         {latestResult ? (
@@ -41,7 +45,7 @@ export function OverlayDisplay() {
             <TeamOverlay result={latestResult} />
           )
         ) : (
-          <div className={styles.empty}>夢結果を待機中</div>
+          <div className={styles.empty}>抽選結果を待機中</div>
         )}
       </section>
     </main>
@@ -53,7 +57,7 @@ function SingleOverlay({ result }: { result: LatestPickResult }) {
 
   return (
     <div className={styles.single}>
-      <div className={styles.label}>この夢に決めたポニ！</div>
+      <div className={styles.label}>ランダムピック結果</div>
       <div className={`${styles.singleDreamImage} ${styles[pokemon.role]}`}>
         <span>{roleSymbols[pokemon.role]}</span>
       </div>
@@ -69,7 +73,7 @@ function TeamOverlay({ result }: { result: LatestPickResult }) {
   if (result.mode === "custom") {
     return (
       <div className={styles.team}>
-        <div className={styles.label}>今夜の5vs5夢カスタム</div>
+        <div className={styles.label}>5vs5カスタム振り分け</div>
         <div className={styles.overlayVersusGrid}>
           <OverlayTeamColumn label="チームA" pokemon={result.pokemon.slice(0, 5)} start={1} />
           <div className={styles.overlayVersusBadge}>VS</div>
@@ -81,15 +85,30 @@ function TeamOverlay({ result }: { result: LatestPickResult }) {
 
   return (
     <div className={styles.team}>
-      <div className={styles.label}>今夜の5人夢チーム</div>
-      <div className={styles.teamGrid}>
+      <div className={styles.label}>{getTeamOverlayLabel(result.mode)}</div>
+      <div
+        className={styles.teamGrid}
+        style={{
+          gridTemplateColumns: `repeat(${Math.min(
+            result.pokemon.length,
+            5
+          )}, minmax(0, 1fr))`
+        }}
+      >
         {result.pokemon.map((pokemon, index) => (
           <div
             key={pokemon.id}
             className={`${styles.teamSlot} ${styles[pokemon.role]}`}
           >
             <span>{index + 1}P</span>
-            <div className={styles.teamDreamImage}>{roleSymbols[pokemon.role]}</div>
+            <div className={styles.teamDreamImage}>
+              {pokemon.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={pokemon.imageUrl} alt={pokemon.nameJa} />
+              ) : (
+                roleSymbols[pokemon.role]
+              )}
+            </div>
             <strong>{pokemon.nameJa}</strong>
           </div>
         ))}
@@ -117,6 +136,10 @@ function OverlayTeamColumn({
             className={`${styles.overlayMiniSlot} ${styles[pickedPokemon.role]}`}
           >
             <span>{start + index}P</span>
+            {pickedPokemon.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={pickedPokemon.imageUrl} alt={pickedPokemon.nameJa} />
+            ) : null}
             <strong>{pickedPokemon.nameJa}</strong>
           </div>
         ))}
@@ -132,3 +155,19 @@ const roleSymbols = {
   allRounder: "BAL",
   supporter: "SUP"
 } as const;
+
+function getTeamOverlayLabel(mode: LatestPickResult["mode"]) {
+  if (mode === "duo") {
+    return "2人デュオ結果";
+  }
+
+  if (mode === "trio") {
+    return "3人トリオ結果";
+  }
+
+  if (mode === "quick") {
+    return "4人クイック結果";
+  }
+
+  return "5人チーム結果";
+}

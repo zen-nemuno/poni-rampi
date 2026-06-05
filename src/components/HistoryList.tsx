@@ -33,11 +33,23 @@ export function HistoryList({ history }: HistoryListProps) {
 
 function getModeLabel(mode: RandomPickHistoryItem["mode"]) {
   if (mode === "single") {
-    return "1体";
+    return "1体ピック";
+  }
+
+  if (mode === "duo") {
+    return "2人デュオ";
+  }
+
+  if (mode === "trio") {
+    return "3人トリオ";
+  }
+
+  if (mode === "quick") {
+    return "4人クイック";
   }
 
   if (mode === "custom") {
-    return "10人カスタム";
+    return "5vs5カスタム";
   }
 
   return "5人チーム";

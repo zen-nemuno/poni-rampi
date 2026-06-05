@@ -23,7 +23,7 @@ export type Pokemon = {
   memo?: string;
 };
 
-export type PickMode = "single" | "team" | "custom";
+export type PickMode = "single" | "duo" | "trio" | "quick" | "team" | "custom";
 
 export type RandomPickFilters = {
   roles: PokemonRole[];
@@ -32,6 +32,8 @@ export type RandomPickFilters = {
   ownedOnly: boolean;
   excludeHistory: boolean;
 };
+
+export type RoleComposition = Record<PokemonRole, number>;
 
 export type RandomPickHistoryItem = {
   id: string;
@@ -54,6 +56,9 @@ export type PoniRampiStorage = {
     isEnabled: boolean;
   }[];
   filters: RandomPickFilters;
+  selectedMode?: PickMode;
+  roleComposition?: RoleComposition;
+  roleFlexCount?: number;
   history: RandomPickHistoryItem[];
 };
 

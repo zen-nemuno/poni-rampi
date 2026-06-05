@@ -5,7 +5,7 @@ import styles from "./PokemonRandomPicker.module.css";
 
 type TeamResultDisplayProps = {
   pokemon: Pokemon[];
-  mode: Extract<PickMode, "team" | "custom">;
+  mode: Exclude<PickMode, "single">;
 };
 
 export function TeamResultDisplay({ pokemon, mode }: TeamResultDisplayProps) {
@@ -20,7 +20,12 @@ export function TeamResultDisplay({ pokemon, mode }: TeamResultDisplayProps) {
   }
 
   return (
-    <div className={styles.teamGrid}>
+    <div
+      className={styles.teamGrid}
+      style={{
+        gridTemplateColumns: `repeat(${Math.min(pokemon.length, 5)}, minmax(0, 1fr))`
+      }}
+    >
       {pokemon.map((pickedPokemon, index) => (
         <PokemonSlot
           key={pickedPokemon.id}
@@ -62,7 +67,12 @@ function PokemonSlot({ pokemon, label }: { pokemon: Pokemon; label: string }) {
     <div className={`${styles.teamSlot} ${styles[pokemon.role]}`}>
       <div className={styles.slotLabel}>{label}</div>
       <div className={styles.slotDreamImage}>
-        <span>{roleSymbols[pokemon.role]}</span>
+        {pokemon.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={pokemon.imageUrl} alt={pokemon.nameJa} />
+        ) : (
+          <span>{roleSymbols[pokemon.role]}</span>
+        )}
       </div>
       <div className={styles.slotName}>{pokemon.nameJa}</div>
       <div className={styles.slotSub}>
